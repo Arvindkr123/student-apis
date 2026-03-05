@@ -12,12 +12,19 @@ import (
 
 	"github.com/arvindkr123/student-apis/internal/config"
 	"github.com/arvindkr123/student-apis/internal/http/handlers/student"
+	"github.com/arvindkr123/student-apis/internal/storage/sqlite"
 )
 
 func main() {
 	// load config
 	cfg := config.MustLoad()
 	// database setup
+	_, dbErr := sqlite.New(cfg)
+	if dbErr != nil {
+		log.Fatal(dbErr)
+	}
+
+	slog.Info("storage initialized", slog.String("env", cfg.Env), slog.String("version", "1.0.0"))
 
 	// setup router
 	router := http.NewServeMux()
